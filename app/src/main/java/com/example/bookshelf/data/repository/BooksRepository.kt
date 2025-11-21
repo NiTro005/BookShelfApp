@@ -14,8 +14,9 @@ class BooksNetworkRepository(
     private val apiKey: String
 ): BooksRepository {
     override suspend fun getAllBooks(query: String): List<ItemId> {
+        val formatQuery = query.replace(" ", "+")
         return service.getBooks(
-            query = query,
+            query = formatQuery,
             apiKey = apiKey,
             maxResult = 40
             )
