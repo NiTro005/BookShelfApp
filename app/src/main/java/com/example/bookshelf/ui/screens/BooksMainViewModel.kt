@@ -19,6 +19,7 @@ import java.io.IOException
 class BooksMainViewModel(private val repository: BooksRepository): ViewModel() {
     private val _books = MutableStateFlow(BooksUiState())
     val book: StateFlow<BooksUiState> = _books.asStateFlow()
+
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
@@ -74,5 +75,4 @@ class BooksMainViewModel(private val repository: BooksRepository): ViewModel() {
             }
         }
     }
-
 }
