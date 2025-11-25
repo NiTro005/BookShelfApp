@@ -1,4 +1,4 @@
-package com.example.bookshelf.ui.screens
+package com.example.bookshelf.ui
 
 sealed interface LoadingStatus {
     object Loading: LoadingStatus
