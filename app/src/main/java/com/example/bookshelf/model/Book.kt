@@ -2,7 +2,9 @@ package com.example.bookshelf.model
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonIgnoreUnknownKeys
 
+@JsonIgnoreUnknownKeys
 @Serializable
 data class BookUI(
     val id: String,
@@ -10,17 +12,19 @@ data class BookUI(
     val webReaderLink: String? = null
 )
 
+@JsonIgnoreUnknownKeys
 @Serializable
 data class VolumeInfo(
     val title: String,
     val description: String? = null,
-    val imageLink: ImageLink? = null,
+    val imageLinks: ImageLinks? = null,
     val authors: List<String> = emptyList(),
-    val pageCount: String
+    val pageCount: String? = null
 )
 
+@JsonIgnoreUnknownKeys
 @Serializable
-data class ImageLink(
+data class ImageLinks(
     val thumbnail: String? = null,
     val small: String? = null
 )

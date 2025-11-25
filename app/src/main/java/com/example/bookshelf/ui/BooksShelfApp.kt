@@ -38,12 +38,15 @@ fun BooksShelfApp(winSize: WindowWidthSizeClass) {
     ) {
         composable(BookShelfScreenType.LOAD.name) {
             LoadingScreen(
+                uiState = uiState,
                 loadComplete = {
                     when (navType) {
                         NavType.LIST -> navController.navigate(BookShelfScreenType.HOME.name)
                         NavType.LIST_AND_DETAIL -> navController.navigate(BookShelfScreenType.HOME_AND_DETAIL.name)
                     }
-                }
+                },
+                retryAction = viewModel::initApp,
+                modifier = Modifier.fillMaxSize()
             )
         }
 

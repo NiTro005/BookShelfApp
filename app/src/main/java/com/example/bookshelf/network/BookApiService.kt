@@ -1,5 +1,6 @@
 package com.example.bookshelf.network
 
+import com.example.bookshelf.model.BookList
 import com.example.bookshelf.model.BookUI
 import com.example.bookshelf.model.Item
 import retrofit2.http.GET
@@ -12,7 +13,7 @@ interface BookApiService {
         @Query("q") query: String,
         @Query("key") apiKey: String,
         @Query("maxResults") maxResult: Int = 20
-    ) : List<Item>
+    ) : BookList
     @GET("books/v1/volumes/{bookId}")
     suspend fun getBookById(
         @Path("bookId") bookId: String,

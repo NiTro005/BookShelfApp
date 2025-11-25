@@ -16,8 +16,14 @@ class DefaultAppContainer: AppContainer {
 
     private val baseUrl = "https://www.googleapis.com"
     private val apiKey = "AIzaSyDRfMrJrN4AT4LcPmT-tUUWkfQjA2S4k3U"
+
+    private val json = Json {
+        ignoreUnknownKeys = true
+        coerceInputValues = true
+        isLenient = true
+    }
     private val retrofit = Retrofit.Builder()
-        .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
+        .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
         .baseUrl(baseUrl)
         .build()
 

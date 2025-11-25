@@ -31,7 +31,7 @@ class BooksMainViewModel(private val repository: BooksRepository): ViewModel() {
     }
 
     init {
-        searchBooks("Star Wars")
+        initApp()
     }
 
     fun bookDetails(id: String) {
@@ -54,6 +54,10 @@ class BooksMainViewModel(private val repository: BooksRepository): ViewModel() {
         }
     }
 
+    fun initApp() {
+        searchBooks("Star Wars")
+    }
+
     fun searchBooks(query: String) {
         viewModelScope.launch {
             _books.update { it.copy(status = LoadingStatus.Loading)}
@@ -61,10 +65,10 @@ class BooksMainViewModel(private val repository: BooksRepository): ViewModel() {
                 val booksList = repository.getAllBooks(
                     query = query
                 )
-                val firstBook = booksList.firstOrNull()?.let { repository.getBookById(it.id) }
+                val firstBook = booksList.items.firstOrNull()?.let { repository.getBookById(it.id) }
                 _books.update { currentState ->
                     currentState.copy(
-                        booksList = booksList,
+                        booksList = booksList.items,
                         currentBook = firstBook,
                         status = LoadingStatus.Success
                     )
