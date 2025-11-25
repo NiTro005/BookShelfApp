@@ -1,5 +1,6 @@
 package com.example.bookshelf.ui
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -68,12 +69,14 @@ class BooksMainViewModel(private val repository: BooksRepository): ViewModel() {
                         status = LoadingStatus.Success
                     )
                 }
+                Log.d("ViewModel", "Retrofit connection succesfuly")
             } catch (e: Exception) {
                 _books.update { it.copy(
                     booksList = emptyList(),
                     currentBook = null,
                     status = LoadingStatus.Error(e.message)
                 ) }
+                Log.d("ViewModel", "Retrofit connection failed ${e.message}")
             }
         }
     }

@@ -22,7 +22,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.example.bookshelf.R
-import com.example.bookshelf.model.Book
+import com.example.bookshelf.model.BookUI
+import com.example.bookshelf.model.Item
+import com.example.bookshelf.model.VolumeInfoLite
 import com.example.bookshelf.ui.BooksMainViewModel
 import com.example.bookshelf.ui.BooksUiState
 import com.example.compose.BookShelfTheme
@@ -64,7 +66,7 @@ fun BookHomeScreen(
 }
 
 @Composable
-fun BookImage(book: Book, modifier: Modifier = Modifier) {
+fun BookImage(book: Item, modifier: Modifier = Modifier) {
     Box(modifier = modifier) {
     }
 }
@@ -74,10 +76,11 @@ fun BookImage(book: Book, modifier: Modifier = Modifier) {
 @Preview
 fun HomePreview() {
     BookShelfTheme {
-        val viewModel: BooksMainViewModel = viewModel(factory = BooksMainViewModel.Factory)
-        val uiState: BooksUiState by viewModel.book.collectAsState()
         BookHomeScreen(
-            uiState = uiState,
+            uiState = BooksUiState(booksList = listOf(
+                Item(id = "9390304", volumeInfo = VolumeInfoLite(title = "fjf")),
+                Item(id = "fefdf", volumeInfo = VolumeInfoLite(title = "fjf"))
+            )),
             {},
             {}
         )
