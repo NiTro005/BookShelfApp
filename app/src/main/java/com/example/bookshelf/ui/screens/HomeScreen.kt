@@ -1,9 +1,11 @@
 package com.example.bookshelf.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,14 +16,23 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -67,22 +78,57 @@ fun BookHomeScreen(
     onQueryClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-
+    var rememberTextField by rememberSaveable { mutableStateOf("") }
     Scaffold(
         topBar = { BookHomeTopAppBar() }
     ) { padding ->
-        LazyVerticalGrid(
-            columns = GridCells.Adaptive(150.dp),
-            contentPadding = padding,
-            modifier = modifier.padding(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            items(items = uiState.booksList, key = {book -> book.id }) { book ->
-                BookImage(book = book, modifier = Modifier
-                    .height(250.dp)
-                    .fillMaxWidth())
+        Box(modifier = modifier.padding(padding)) {
+            LazyVerticalGrid(
+                columns = GridCells.Adaptive(150.dp),
+                modifier = Modifier.padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                items(items = uiState.booksList, key = { book -> book.id }) { book ->
+                    BookImage(
+                        book = book, modifier = Modifier
+                        .height(250.dp)
+                        .fillMaxWidth().clickable(
+                            onClick = { onBookClick(book.id) }
+                        ))
+                }
             }
+            BookQueryField(
+                onQueryClick = onQueryClick,
+                value = rememberTextField,
+                onValueChange = { rememberTextField = it},
+                modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 24.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun BookQueryField(
+    modifier: Modifier = Modifier,
+    onQueryClick: (String) -> Unit,
+    onValueChange: (String) -> Unit,
+    value: String
+) {
+    Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
+        OutlinedTextField(
+            value = value,
+            onValueChange = { onValueChange(it) },
+            label =  {Text("Поиск")}
+        )
+        IconButton(
+            onClick = { onQueryClick(value) },
+            modifier = Modifier
+        ) {
+            Icon(
+                imageVector = Icons.Default.Search,
+                contentDescription = "Search"
+            )
         }
     }
 }
@@ -90,39 +136,24 @@ fun BookHomeScreen(
 @Composable
 fun BookImage(book: Item, modifier: Modifier = Modifier) {
     Box(modifier = modifier) {
-        Column() {
-            AsyncImage(
-                model = ImageRequest.Builder(context = LocalContext.current)
-                    .data(book.volumeInfo.imageLinks?.thumbnail)
-                    .crossfade(true)
-                    .build(),
-                contentDescription = book.volumeInfo.title,
-                contentScale = ContentScale.Crop,
-                placeholder = painterResource(R.drawable.loading_img),
-                error = painterResource(R.drawable.ic_broken_image),
-                modifier = Modifier.fillMaxSize()
-            )
+        AsyncImage(
+            model = ImageRequest.Builder(context = LocalContext.current)
+                .data(book.volumeInfo.imageLinks?.thumbnail)
+                .crossfade(true)
+                .build(),
+            contentDescription = book.volumeInfo.title,
+            contentScale = ContentScale.Crop,
+            placeholder = painterResource(R.drawable.loading_img),
+            error = painterResource(R.drawable.ic_broken_image),
+            modifier = Modifier.align(Alignment.Center).fillMaxSize()
+        )
+        if(book.volumeInfo.imageLinks?.thumbnail == null) {
             Text(
                 text = book.volumeInfo.title,
                 style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.align(Alignment.BottomCenter),
                 color = MaterialTheme.colorScheme.onSurface
             )
         }
-    }
-}
-
-
-@Composable
-@Preview
-fun HomePreview() {
-    BookShelfTheme {
-        BookHomeScreen(
-            uiState = BooksUiState(booksList = listOf(
-                Item(id = "9390304", volumeInfo = VolumeInfoLite(title = "fjf",)),
-                Item(id = "fefdf", volumeInfo = VolumeInfoLite(title = "StarWars"))
-            )),
-            {},
-            {}
-        )
     }
 }

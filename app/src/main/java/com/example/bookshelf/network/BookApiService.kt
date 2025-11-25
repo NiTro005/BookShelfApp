@@ -12,7 +12,7 @@ interface BookApiService {
     suspend fun getBooks(
         @Query("q") query: String,
         @Query("key") apiKey: String,
-        @Query("maxResults") maxResult: Int = 20
+        @Query("maxResults") maxResult: Int
     ) : BookList
     @GET("books/v1/volumes/{bookId}")
     suspend fun getBookById(
