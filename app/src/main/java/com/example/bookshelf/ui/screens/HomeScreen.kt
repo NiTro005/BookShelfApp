@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -27,7 +28,9 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -57,6 +60,7 @@ import com.example.bookshelf.model.VolumeInfoLite
 import com.example.bookshelf.ui.BooksMainViewModel
 import com.example.bookshelf.ui.BooksUiState
 import com.example.compose.BookShelfTheme
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -79,6 +83,10 @@ fun BookHomeScreen(
     modifier: Modifier = Modifier
 ) {
     var rememberTextField by rememberSaveable { mutableStateOf("") }
+    LaunchedEffect(rememberTextField) {
+        delay(500)
+        if (!rememberTextField.isEmpty()) onQueryClick(rememberTextField)
+    }
     Scaffold(
         topBar = { BookHomeTopAppBar() }
     ) { padding ->
@@ -119,17 +127,14 @@ fun BookQueryField(
         OutlinedTextField(
             value = value,
             onValueChange = { onValueChange(it) },
-            label =  {Text("Поиск")}
+            label =  {Text("Поиск")},
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.7f),
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.3f),
+                focusedSupportingTextColor = MaterialTheme.colorScheme.onSurface
+            ),
+            shape = RoundedCornerShape(10.dp)
         )
-        IconButton(
-            onClick = { onQueryClick(value) },
-            modifier = Modifier
-        ) {
-            Icon(
-                imageVector = Icons.Default.Search,
-                contentDescription = "Search"
-            )
-        }
     }
 }
 
