@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.collections.emptyList
 
 class BooksMainViewModel(private val repository: BooksRepository): ViewModel() {
     private val _books = MutableStateFlow(BooksUiState())
@@ -38,7 +39,8 @@ class BooksMainViewModel(private val repository: BooksRepository): ViewModel() {
             try {
                 _books.update {
                     it.copy(
-                        currentBook = repository.getBookById(id)
+                        currentBook = repository.getBookById(id),
+                        status = LoadingStatus.Success
                     )
                 }
             } catch (e: Exception) {
@@ -55,15 +57,15 @@ class BooksMainViewModel(private val repository: BooksRepository): ViewModel() {
         viewModelScope.launch {
             _books.update { it.copy(status = LoadingStatus.Loading)}
             try {
+                val booksList = repository.getAllBooks(
+                    query = query
+                )
+                val firstBook = booksList.firstOrNull()?.let { repository.getBookById(it.id) }
                 _books.update { currentState ->
-
-                    val booksList = repository.getAllBooks(
-                        query = query
-                    ).map { itemId -> repository.getBookById(itemId.id) }
-
                     currentState.copy(
                         booksList = booksList,
-                        currentBook = booksList.first()
+                        currentBook = firstBook,
+                        status = LoadingStatus.Success
                     )
                 }
             } catch (e: Exception) {

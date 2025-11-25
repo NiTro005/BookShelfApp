@@ -14,10 +14,9 @@ import androidx.navigation.compose.rememberNavController
 import com.example.bookshelf.ui.screens.BookHomeScreen
 import com.example.bookshelf.ui.screens.LoadingScreen
 
-enum class Example {
-    LOAD, HOME, DETAIL, HOME_AND_DETAIL
+enum class BookShelfScreenType {
+    LOAD, HOME, HOME_AND_DETAIL, DETAIL
 }
-
 enum class NavType {
     LIST, LIST_AND_DETAIL
 }
@@ -34,35 +33,38 @@ fun BooksShelfApp(winSize: WindowWidthSizeClass) {
     }
     NavHost(
         navController = navController,
-        startDestination = Example.LOAD.name,
+        startDestination = BookShelfScreenType.LOAD.name,
         modifier = Modifier.fillMaxSize()
     ) {
-        composable(Example.LOAD.name) {
+        composable(BookShelfScreenType.LOAD.name) {
             LoadingScreen(
                 loadComplete = {
                     when (navType) {
-                        NavType.LIST -> navController.navigate(Example.HOME.name)
-                        NavType.LIST_AND_DETAIL -> navController.navigate(Example.HOME_AND_DETAIL.name)
+                        NavType.LIST -> navController.navigate(BookShelfScreenType.HOME.name)
+                        NavType.LIST_AND_DETAIL -> navController.navigate(BookShelfScreenType.HOME_AND_DETAIL.name)
                     }
                 }
             )
         }
 
-        composable(Example.HOME.name){ bookId ->
+        composable(BookShelfScreenType.HOME.name){
             BookHomeScreen(
                 uiState = uiState,
-                onBookClick = {
-                    navController.navigate("${Example.DETAIL.name}/${bookId}")
-                    viewModel.bookDetails(bookId.toString())
+                onBookClick = { bookId ->
+                    navController.navigate("${BookShelfScreenType.DETAIL.name}/${bookId}")
+                    viewModel.bookDetails(bookId)
+                },
+                onQueryClick = { query ->
+                    viewModel.searchBooks(query)
                 }
             )
         }
 
-        composable("${Example.DETAIL.name}/{bookId}") { backStackEntree ->
+        composable("${BookShelfScreenType.DETAIL.name}/{bookId}") { backStackEntree ->
             TODO()
         }
 
-        composable(Example.HOME_AND_DETAIL.name) {
+        composable(BookShelfScreenType.HOME_AND_DETAIL.name) {
             ExtractSizeApp()
         }
     }

@@ -1,10 +1,10 @@
 package com.example.bookshelf.ui
 
-import com.example.bookshelf.model.Book
-import com.example.bookshelf.model.ItemId
+import com.example.bookshelf.model.BookUI
+import com.example.bookshelf.model.Item
 
 data class BooksUiState(
-    val booksList: List<Book> = emptyList(),
-    val currentBook: Book? = null,
+    val booksList: List<Item> = emptyList(),
+    val currentBook: BookUI? = null,
     val status: LoadingStatus = LoadingStatus.Loading
 )
