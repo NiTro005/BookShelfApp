@@ -1,5 +1,6 @@
 package com.example.bookshelf.ui
 
+import android.app.Activity
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
@@ -9,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -78,7 +80,19 @@ fun BooksShelfApp(winSize: WindowWidthSizeClass) {
         }
 
         composable(BookShelfScreenType.HOME_AND_DETAIL.name) {
-            ExtractSizeApp()
+            val activity = LocalContext.current as Activity
+            ExtractSizeApp(
+                uiState = uiState,
+                onBookClick = { bookId ->
+                    viewModel.bookDetails(bookId)
+                },
+                onQueryClick = { query ->
+                    viewModel.searchBooks(query)
+                },
+                onBackAction = {
+                    activity.finish()
+                }
+            )
         }
     }
 }
