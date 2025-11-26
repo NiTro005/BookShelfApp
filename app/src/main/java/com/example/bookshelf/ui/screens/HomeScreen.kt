@@ -31,6 +31,7 @@ import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -82,44 +83,57 @@ fun BookHomeScreen(
     onQueryClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    Scaffold(
+        topBar = { BookHomeTopAppBar() }
+    ) { padding ->
+        BookHomeContent(
+            uiState = uiState,
+            onBookClick = onBookClick,
+            onQueryClick = onQueryClick,
+            modifier = Modifier.padding(padding)
+        )
+    }
+}
+
+@Composable
+fun BookHomeContent(
+    uiState: BooksUiState,
+    onQueryClick: (String) -> Unit,
+    onBookClick: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
     var rememberTextField by rememberSaveable { mutableStateOf("") }
     LaunchedEffect(rememberTextField) {
         delay(500)
         if (!rememberTextField.isEmpty()) onQueryClick(rememberTextField)
     }
-    Scaffold(
-        topBar = { BookHomeTopAppBar() }
-    ) { padding ->
-        Box(modifier = modifier.padding(padding)) {
-            LazyVerticalGrid(
-                columns = GridCells.Adaptive(150.dp),
-                modifier = Modifier.padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                items(items = uiState.booksList, key = { book -> book.id }) { book ->
-                    BookImage(
-                        book = book, modifier = Modifier
+    Box(modifier = modifier) {
+        LazyVerticalGrid(
+            columns = GridCells.Adaptive(150.dp),
+            modifier = Modifier.padding(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            items(items = uiState.booksList, key = { book -> book.id }) { book ->
+                BookImage(
+                    book = book, modifier = Modifier
                         .height(250.dp)
                         .fillMaxWidth().clickable(
                             onClick = { onBookClick(book.id) }
                         ))
-                }
             }
-            BookQueryField(
-                onQueryClick = onQueryClick,
-                value = rememberTextField,
-                onValueChange = { rememberTextField = it},
-                modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 24.dp)
-            )
         }
+        BookQueryField(
+            value = rememberTextField,
+            onValueChange = { rememberTextField = it},
+            modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 24.dp)
+        )
     }
 }
 
 @Composable
 fun BookQueryField(
     modifier: Modifier = Modifier,
-    onQueryClick: (String) -> Unit,
     onValueChange: (String) -> Unit,
     value: String
 ) {
