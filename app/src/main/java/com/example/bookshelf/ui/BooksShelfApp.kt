@@ -11,6 +11,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.bookshelf.ui.screens.BookDetailScreen
 import com.example.bookshelf.ui.screens.BookHomeScreen
 import com.example.bookshelf.ui.screens.LoadingScreen
 
@@ -64,7 +65,13 @@ fun BooksShelfApp(winSize: WindowWidthSizeClass) {
         }
 
         composable("${BookShelfScreenType.DETAIL.name}/{bookId}") { backStackEntree ->
-            TODO()
+            BookDetailScreen(
+                omBackClick =  {
+
+                },
+                uiState = uiState,
+                modifier = Modifier.fillMaxSize()
+            )
         }
 
         composable(BookShelfScreenType.HOME_AND_DETAIL.name) {

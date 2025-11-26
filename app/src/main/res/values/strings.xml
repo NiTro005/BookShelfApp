@@ -4,4 +4,8 @@
     <string name="book_title">%s</string>
     <string name="loading">Loading...</string>
     <string name="back">Back</string>
+    <string name="autors">Автор(ы):</string>
+    <string name="page_count">Число страниц:</string>
+    <string name="description">Описание</string>
+    <string name="book_url">Ccылка на онлайн книгу</string>
 </resources>
