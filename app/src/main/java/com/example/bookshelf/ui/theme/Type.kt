@@ -23,7 +23,7 @@ val AppTypography = Typography(
     ),
     titleLarge = TextStyle(
         fontFamily = Montserrat,
-        fontSize = 36.sp
+        fontSize = 26.sp
     ),
     bodyMedium = TextStyle(
         fontFamily = Montserrat,

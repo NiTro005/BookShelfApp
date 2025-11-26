@@ -5,6 +5,7 @@ import android.icu.text.CaseMap
 import android.telecom.Call
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,6 +18,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -72,7 +74,7 @@ fun DetailsTopBar(
                 overflow = TextOverflow.Ellipsis
             )
         },
-        modifier = modifier
+        modifier = modifier.background(MaterialTheme.colorScheme.secondaryContainer)
     )
 }
 
@@ -129,8 +131,15 @@ fun BookDetailsContent(
         Spacer(Modifier.height(24.dp))
         Column(horizontalAlignment = Alignment.Start) {
             TextRow(stringResource(R.string.autors), book.volumeInfo.authors.toString())
-            book.volumeInfo.pageCount?.let {TextRow(stringResource(R.string.page_count), it) }
-            book.volumeInfo.description?.let {TextRow(stringResource(R.string.description), it)}
+            Divider(Modifier.padding(6.dp))
+            book.volumeInfo.pageCount?.let {
+                TextRow(stringResource(R.string.page_count), it)
+                Divider(Modifier.padding(6.dp))
+            }
+            book.volumeInfo.description?.let {
+                TextRow(stringResource(R.string.description), it)
+                Divider(Modifier.padding(6.dp))
+            }
             book.accessInfo.webReaderLink?.let {
                 Row {
                     Text(
