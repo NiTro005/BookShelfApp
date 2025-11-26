@@ -3,6 +3,7 @@ package com.example.bookshelf.ui.screens
 import android.content.Intent
 import android.icu.text.CaseMap
 import android.telecom.Call
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -74,20 +78,24 @@ fun DetailsTopBar(
 
 @Composable
 fun BookDetailScreen(
-    omBackClick: () -> Unit,
+    onBackClick: () -> Unit,
     uiState: BooksUiState,
     modifier: Modifier = Modifier
 ) {
+    BackHandler {
+        onBackClick()
+    }
     val book = uiState.currentBook
     if(book != null) {
         Scaffold(
             topBar = {
                 DetailsTopBar(
                     title = book.volumeInfo.title,
-                    onBackClick = omBackClick,
+                    onBackClick = onBackClick,
                     modifier = Modifier.fillMaxWidth()
                 )
-            }
+            },
+            modifier = modifier
         ) { paddingValues ->
             BookDetailsContent(
                 book = book,
@@ -103,8 +111,9 @@ fun BookDetailsContent(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    val scrollState = rememberScrollState()
     Column(
-        modifier = modifier
+        modifier = modifier.verticalScroll(scrollState)
     ) {
         AsyncImage(
             model = ImageRequest.Builder(context = context)
@@ -114,14 +123,15 @@ fun BookDetailsContent(
             contentDescription = book.volumeInfo.title,
             contentScale = ContentScale.FillBounds,
             placeholder = painterResource(R.drawable.loading_img),
-            error = painterResource(R.drawable.ic_broken_image)
+            error = painterResource(R.drawable.ic_broken_image),
+            modifier = Modifier.align(Alignment.CenterHorizontally).size(width = 200.dp, height = 300.dp)
         )
         Spacer(Modifier.height(24.dp))
         Column(horizontalAlignment = Alignment.Start) {
             TextRow(stringResource(R.string.autors), book.volumeInfo.authors.toString())
             book.volumeInfo.pageCount?.let {TextRow(stringResource(R.string.page_count), it) }
             book.volumeInfo.description?.let {TextRow(stringResource(R.string.description), it)}
-            book.webReaderLink?.let {
+            book.accessInfo.webReaderLink?.let {
                 Row {
                     Text(
                         text = stringResource(R.string.book_url),

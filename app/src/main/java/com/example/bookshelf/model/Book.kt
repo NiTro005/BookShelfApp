@@ -9,9 +9,14 @@ import kotlinx.serialization.json.JsonIgnoreUnknownKeys
 data class BookUI(
     val id: String,
     val volumeInfo: VolumeInfo,
-    val webReaderLink: String? = null
+    val accessInfo: AccessInfo
 )
 
+@JsonIgnoreUnknownKeys
+@Serializable
+data class AccessInfo(
+    val webReaderLink: String? = null
+)
 @JsonIgnoreUnknownKeys
 @Serializable
 data class VolumeInfo(
