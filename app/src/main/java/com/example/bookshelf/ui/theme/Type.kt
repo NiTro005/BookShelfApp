@@ -4,6 +4,7 @@ import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.bookshelf.R
 
@@ -19,6 +20,10 @@ val AppTypography = Typography(
     displaySmall = TextStyle(
         fontFamily = MomoSignature,
         fontSize = 40.sp
+    ),
+    titleLarge = TextStyle(
+        fontFamily = Montserrat,
+        fontSize = 26.sp
     ),
     bodyMedium = TextStyle(
         fontFamily = Montserrat,
